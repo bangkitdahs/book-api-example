@@ -21,9 +21,6 @@ jobs:
       - name: 'Get the tag name'
         id: get_tag_name
         run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-      
-      - name: 'Fetch all branches'
-        run: git fetch --all
   
       - name: 'Create a new branch from the tag'
         env:
@@ -56,6 +53,9 @@ jobs:
       - name: 'Get the tag name'
         id: get_tag_name
         run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      
+      - name: 'Fetch all branches'
+        run: git fetch --all
 
       - name: 'Checkout the branch'
         run: |
