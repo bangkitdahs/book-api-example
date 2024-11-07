@@ -12,17 +12,17 @@ env:
   WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
 jobs:
   create-release-branch:
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-latest'
       
     steps:
-      - name: Checkout the repository
+      - name: 'Checkout the repository'
         uses: actions/checkout@v3
   
-      - name: Get the tag name
+      - name: 'Get the tag name'
         id: get_tag_name
         run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
   
-      - name: Create a new branch from the tag
+      - name: 'Create a new branch from the tag'
         env:
           TAG_NAME: ${{ env.TAG_NAME }}
         run: |
@@ -33,6 +33,7 @@ jobs:
           git push origin $BRANCH_NAME
 
   deploy-to-cloud-run:
+    needs: 'create-release-branch'
     runs-on: 'ubuntu-latest'
 
     permissions:
