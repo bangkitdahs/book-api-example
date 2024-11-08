@@ -4,7 +4,20 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-let books = []; // In-memory array to store books
+let books = [];
+let library = [];
+
+app.post("/library", (req, res) => {
+  const { name, location } = req.body;
+  const newLibrary = { id: library.length + 1, name, location };
+  library.push(newLibrary);
+  res.status(201).json(newLibrary);
+});
+
+// Get all books
+app.get("/library", (req, res) => {
+  res.json(library);
+});
 
 // Create a new book
 app.post("/books", (req, res) => {
