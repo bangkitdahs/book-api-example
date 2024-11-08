@@ -68,12 +68,15 @@ jobs:
           username: 'oauth2accesstoken'
           password: '${{ steps.auth.outputs.auth_token }}'
           registry: '${{ env.REGION }}-docker.pkg.dev'
+      
+      - name: 'Configure Docker'
+        run: |-
+          gcloud auth configure-docker "${{ env.REGION }}-docker.pkg.dev"
 
       - name: 'Build and Push Container'
         run: |-
           DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY }}/${{ env.SERVICE }}:${{ env.TAG_NAME }}"
           docker build --tag "${DOCKER_TAG}" .
-          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://${{ env.REGION }}-docker.pkg.dev
           docker push "${DOCKER_TAG}"
 
       - name: 'Deploy to Cloud Run'
