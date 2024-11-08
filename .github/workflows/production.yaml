@@ -11,6 +11,7 @@ env:
   REGION: ${{ secrets.REGION }}
   SERVICE: ${{ secrets.SERVICE }}
   WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+  CLOUD_RUN_SERVICE_ACCOUNT: ${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT }}
 jobs:
   create-release-branch:
     runs-on: 'ubuntu-latest'
@@ -50,6 +51,7 @@ jobs:
         uses: 'google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
         with:
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: '${{ env.CLOUD_RUN_SERVICE_ACCOUNT }}'
           
       - name: 'Get the tag name'
         id: get_tag_name
@@ -75,7 +77,7 @@ jobs:
 
       - name: 'Build and Push Container'
         run: |-
-          DOCKER_TAG="us-central1-docker.pkg.dev/bangkit-learning-441016/gh-action-book-api-demo/${{ env.SERVICE }}:${{ env.TAG_NAME }}"
+          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY }}/${{ env.SERVICE }}:${{ env.TAG_NAME }}"
           docker build --tag "${DOCKER_TAG}" .
           docker push "${DOCKER_TAG}"
 
